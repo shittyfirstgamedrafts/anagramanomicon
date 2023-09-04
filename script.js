@@ -54,8 +54,8 @@ function generateRandomSentence() {
 }
 
 // Helper function to scramble a string
-function scrambleString(str) {
-  const seed = Math.floor(Date.now() / (60 * 1000));
+function scrambleString(str, addToSeed = 0) {
+  const seed = Math.floor(Date.now() / (60 * 1000)) + addToSeed;
   const randomGenerator = seedableRandom(seed);
   const chars = str.split("");
   for (let i = chars.length - 1; i > 0; i--) {
@@ -69,6 +69,7 @@ function scrambleString(str) {
 const scrambledLettersEl = document.getElementById("scrambled-letters");
 const userGuessEl = document.getElementById("user-guess");
 const submitGuessBtn = document.getElementById("submit-guess");
+const scrambleBtn = document.getElementById("scramble-letters");
 const foundWordsEl = document.getElementById("found-words");
 const wrongWordsEl = document.getElementById("wrong-words");
 
@@ -94,6 +95,14 @@ const removeWord = (word) => {
     }
     scrambledLettersEl.textContent = chars.join("");
 
+}
+
+let scrambleCount = 0;
+
+const scrambleLetters = () => {
+    const letters = scrambledLettersEl.textContent;
+    
+    scrambledLettersEl.textContent = scrambleString(letters, scrambleCount++);
 }
 
 const guessWord = () => {
@@ -153,6 +162,7 @@ const guessWord = () => {
 };
 
 submitGuessBtn.addEventListener("click", guessWord);
+scrambleBtn.addEventListener("click", scrambleLetters);
 // Event listener for enter key
 userGuessEl.addEventListener("keyup", (e) => {
     if (e.key === "Enter") {
