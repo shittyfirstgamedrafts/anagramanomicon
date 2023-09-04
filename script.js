@@ -1,3 +1,23 @@
+// Helper function to generate a seedable random
+function seedableRandom(seed) {
+    // Constants for the LCG algorithm (change these for different sequences)
+    const a = 1664525;
+    const c = 1013904223;
+    const m = Math.pow(2, 32);
+  
+    // Internal state variable
+    let state = seed;
+  
+    // Function to generate the next random number
+    function random() {
+      state = (a * state + c) % m;
+      return state / m; // Return a value between 0 and 1
+    }
+  
+    // Return the random function to be used with the same seed
+    return random;
+  }
+
 // Helper function to generate a random sentence
 function generateRandomSentence() {
   const sentences = [
@@ -35,9 +55,11 @@ function generateRandomSentence() {
 
 // Helper function to scramble a string
 function scrambleString(str) {
+  const seed = Math.floor(Date.now() / (60 * 1000));
+  const randomGenerator = seedableRandom(seed);
   const chars = str.split("");
   for (let i = chars.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(randomGenerator() * (i + 1));
     [chars[i], chars[j]] = [chars[j], chars[i]];
   }
   return chars.join("");
